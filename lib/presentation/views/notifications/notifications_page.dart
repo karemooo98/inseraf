@@ -18,11 +18,6 @@ class NotificationsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Obx(
-          () => Text(
-            'Notifications${controller.unreadCount.value > 0 ? ' (${controller.unreadCount.value})' : ''}',
-          ),
-        ),
         actions: <Widget>[
           Obx(
             () => controller.unreadCount.value > 0

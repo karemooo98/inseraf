@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../domain/entities/user_summary.dart';
 import '../../controllers/auth_controller.dart';
@@ -18,7 +19,7 @@ class ReportsPage extends StatelessWidget {
 
     if (!isAdmin) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Reports')),
+        appBar: AppBar(),
         body: const Center(child: Text('Access denied. Admin only.')),
       );
     }
@@ -26,14 +27,8 @@ class ReportsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Reports'),
         actions: <Widget>[
           Obx(() => _buildSearchIcon(context, controller)),
-          IconButton(
-            icon: const Icon(Icons.date_range),
-            tooltip: 'Select Date Range',
-            onPressed: () => _showDateRangePicker(context, controller),
-          ),
         ],
       ),
       body: Obx(() {
@@ -249,54 +244,56 @@ class ReportsPage extends StatelessWidget {
       (int sum, UserSummary s) => sum + (s.absentDays ?? 0),
     );
 
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final bool isNarrow = constraints.maxWidth < 520;
-        final double itemWidth = isNarrow
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 12) / 2;
-
-        final List<Widget> cards = <Widget>[
-          _buildStatCard(
-            context,
-            'Worked',
-            '${totalWorked.toStringAsFixed(1)}',
-            'h',
-            Icons.access_time,
-            fixedWidth: itemWidth,
-          ),
-          _buildStatCard(
-            context,
-            'Overtime',
-            '${totalOvertime.toStringAsFixed(1)}',
-            'h',
-            Icons.trending_up,
-            fixedWidth: itemWidth,
-          ),
-          _buildStatCard(
-            context,
-            'Missing',
-            '${totalMissing.toStringAsFixed(1)}',
-            'h',
-            Icons.warning_amber,
-            fixedWidth: itemWidth,
-          ),
-          _buildStatCard(
-            context,
-            'Absent',
-            totalAbsent.toString(),
-            'days',
-            Icons.event_busy,
-            fixedWidth: itemWidth,
-          ),
-        ];
-
-        return Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: cards,
-        );
-      },
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Worked',
+                '${totalWorked.toStringAsFixed(1)}',
+                'h',
+                Icons.access_time,
+              ),
+            ),
+            SizedBox(width: 1.5.w),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Overtime',
+                '${totalOvertime.toStringAsFixed(1)}',
+                'h',
+                Icons.trending_up,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 1.5.h),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Missing',
+                '${totalMissing.toStringAsFixed(1)}',
+                'h',
+                Icons.warning_amber,
+              ),
+            ),
+            SizedBox(width: 1.5.w),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                'Absent',
+                totalAbsent.toString(),
+                'days',
+                Icons.event_busy,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -305,17 +302,15 @@ class ReportsPage extends StatelessWidget {
     String label,
     String value,
     String unit,
-    IconData icon, {
-    double? fixedWidth,
-  }) {
+    IconData icon,
+  ) {
     final Color primaryColor = Theme.of(context).colorScheme.primary;
 
     return Container(
-      width: fixedWidth,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(2.0.h),
       decoration: BoxDecoration(
         color: primaryColor.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(1.5.h),
         border: Border.all(
           color: primaryColor.withValues(alpha: 0.2),
           width: 1,
@@ -323,52 +318,60 @@ class ReportsPage extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Row(
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: EdgeInsets.all(0.8.h),
                 decoration: BoxDecoration(
                   color: primaryColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(1.0.h),
                 ),
-                child: Icon(icon, color: primaryColor, size: 18),
+                child: Icon(icon, color: primaryColor, size: 2.5.h),
               ),
               const Spacer(),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 1.5.h),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
+              Flexible(
+                child: Text(
                 value,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: primaryColor,
+                    fontSize: 3.0.h,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 0.5.w),
               Padding(
-                padding: const EdgeInsets.only(bottom: 2),
+                padding: EdgeInsets.only(bottom: 0.2.h),
                 child: Text(
                   unit,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: primaryColor.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w500,
-                    fontSize: 11,
+                    fontSize: 1.4.h,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 0.3.h),
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Colors.grey[600],
-              fontSize: 11,
+              fontSize: 1.4.h,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

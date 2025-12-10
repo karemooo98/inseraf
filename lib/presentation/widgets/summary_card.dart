@@ -14,7 +14,7 @@ class SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Container(
-      constraints: const BoxConstraints(minWidth: 140, maxWidth: 220),
+      width: 160,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHigh,

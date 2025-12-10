@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../domain/entities/user.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/user_controller.dart';
+import '../../widgets/employee_card.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -17,7 +19,7 @@ class UsersPage extends StatelessWidget {
 
     if (!isAdmin) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Users')),
+        appBar: AppBar(),
         body: const Center(child: Text('Access denied. Admin only.')),
       );
     }
@@ -25,7 +27,6 @@ class UsersPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('User Management'),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (String? role) {
@@ -107,61 +108,58 @@ class UsersPage extends StatelessWidget {
   Widget _buildUserCard(BuildContext context, User user, UserController controller) {
     final Color roleColor = _getRoleColor(user.role);
 
-    return Card(
-      color: Colors.grey.shade100,
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: roleColor.withValues(alpha: 0.2),
-          child: Text(
-            user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-            style: TextStyle(color: roleColor, fontWeight: FontWeight.bold),
-          ),
-        ),
-        title: Text(user.name),
+    return EmployeeCard(
+      userName: user.name,
+      employeeNumber: user.employeeNumber?.toString(),
+      userId: user.id,
+      avatarBackgroundColor: roleColor.withValues(alpha: 0.2),
+      avatarTextColor: roleColor,
+      backgroundColor: Colors.grey.shade100,
+      onTap: () => _showEditUserDialog(context, user, controller),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(user.email),
-            if (user.employeeNumber != null)
-              Text('Emp #${user.employeeNumber}'),
-            Row(
+          SizedBox(height: 0.5.h),
+          Text(
+            user.email,
+            style: TextStyle(fontSize: 1.4.h, color: Colors.grey[600]),
+          ),
+          SizedBox(height: 0.5.h),
+          Wrap(
+            spacing: 1.0.w,
+            runSpacing: 0.5.h,
               children: <Widget>[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 1.0.w, vertical: 0.4.h),
                   decoration: BoxDecoration(
                     color: roleColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                   
+                  borderRadius: BorderRadius.circular(1.2.h),
                   ),
                   child: Text(
                     user.role.toUpperCase(),
                     style: TextStyle(
                       color: roleColor,
-                      fontSize: 10,
+                    fontSize: 1.2.h,
                       fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
-                if (!user.isActive) ...[
-                  const SizedBox(width: 8),
+              ),
+              if (!user.isActive)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 1.0.w, vertical: 0.4.h),
                     decoration: BoxDecoration(
                       color: Colors.red.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.red),
+                    borderRadius: BorderRadius.circular(1.2.h),
                     ),
-                    child: const Text(
+                  child: Text(
                       'INACTIVE',
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: 10,
+                      fontSize: 1.2.h,
                         fontWeight: FontWeight.bold,
-                      ),
                     ),
                   ),
-                ],
+                ),
               ],
             ),
           ],
@@ -178,8 +176,6 @@ class UsersPage extends StatelessWidget {
             const PopupMenuItem(value: 'edit', child: Text('Edit')),
             const PopupMenuItem(value: 'delete', child: Text('Delete')),
           ],
-        ),
-        onTap: () => _showEditUserDialog(context, user, controller),
       ),
     );
   }

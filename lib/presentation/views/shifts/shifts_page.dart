@@ -198,7 +198,7 @@ class ShiftsPage extends StatelessWidget {
 
     if (!canAccess) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Shifts')),
+        appBar: AppBar(),
         body: const Center(child: Text('Access denied. Admin/Manager only.')),
       );
     }
@@ -206,7 +206,6 @@ class ShiftsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Shifts'),
         actions: isAdmin
             ? <Widget>[
                 IconButton(

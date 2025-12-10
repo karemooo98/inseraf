@@ -93,6 +93,7 @@ class AttendanceController extends GetxController {
   }
 
   Future<void> updateAttendance({
+    required int? recordId,
     required int userId,
     required String date,
     required String status,
@@ -106,6 +107,7 @@ class AttendanceController extends GetxController {
       isUpdating.value = true;
       errorMessage.value = null;
       await updateAttendanceUseCase(
+        recordId: recordId,
         userId: userId,
         date: date,
         status: status,

@@ -24,9 +24,7 @@ class OvertimePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Overtime Records'),
-      ),
+      appBar: AppBar(),
       body: Obx(
         () {
           if (controller.isLoading.value) {

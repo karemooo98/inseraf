@@ -29,7 +29,6 @@ class StandaloneTasksPage extends StatelessWidget {
       length: canApprove ? 2 : 1,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Tasks'),
           bottom: canApprove
               ? const TabBar(
                   tabs: <Widget>[

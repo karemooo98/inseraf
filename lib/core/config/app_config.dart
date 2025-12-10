@@ -2,7 +2,7 @@ class AppConfig {
   AppConfig._();
 
   /// Base URL for the Attendance API.
-  static const String baseUrl = 'http://148.230.108.157:8080';
+  static const String baseUrl = 'https://api.wsl-hr.cloud';
 
   /// Default connection timeout for all HTTP calls.
   static const Duration connectionTimeout = Duration(seconds: 25);

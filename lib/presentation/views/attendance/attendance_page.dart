@@ -27,9 +27,7 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Attendance'),
-      ),
+      appBar: AppBar(),
       body: Obx(
         () => Column(
           children: <Widget>[

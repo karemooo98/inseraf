@@ -26,9 +26,7 @@ class DailyReportsPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daily Reports'),
-      ),
+      appBar: AppBar(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateReportDialog(context, controller),
         icon: const Icon(Icons.add),

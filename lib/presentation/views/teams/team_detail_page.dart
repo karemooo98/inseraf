@@ -28,54 +28,50 @@ class TeamDetailPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Obx(
-          () => Text(controller.selectedTeam.value?.name ?? 'Team Details'),
-        ),
-      ),
+      appBar: AppBar(),
       body: Obx(() {
         if (controller.isLoading.value &&
             controller.selectedTeam.value == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        final Team? team = controller.selectedTeam.value;
-        if (team == null) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Icon(Icons.error_outline, size: 64, color: Colors.grey),
-                const SizedBox(height: 16),
-                Text(
-                  controller.errorMessage.value.isEmpty
-                      ? 'Team not found'
-                      : controller.errorMessage.value,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => controller.loadTeamById(teamId),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          );
-        }
+          final Team? team = controller.selectedTeam.value;
+          if (team == null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(Icons.error_outline, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  Text(
+                    controller.errorMessage.value.isEmpty
+                        ? 'Team not found'
+                        : controller.errorMessage.value,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => controller.loadTeamById(teamId),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
 
-        final bool isManager = team.members.any(
+          final bool isManager = team.members.any(
           (member) =>
               member.id == currentUserId && member.teamRole == 'manager',
-        );
-        final bool canManage = isAdmin || isManager;
+          );
+          final bool canManage = isAdmin || isManager;
 
-        return RefreshIndicator(
-          onRefresh: () => controller.loadTeamById(teamId),
-          child: ListView(
-            padding: const EdgeInsets.all(16),
-            children: <Widget>[
-              _buildMembersSection(context, team, controller, canManage),
-              const SizedBox(height: 24),
+          return RefreshIndicator(
+            onRefresh: () => controller.loadTeamById(teamId),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: <Widget>[
+                _buildMembersSection(context, team, controller, canManage),
+                const SizedBox(height: 24),
               _buildTasksSection(
                 context,
                 team,
@@ -83,9 +79,9 @@ class TeamDetailPage extends StatelessWidget {
                 canManage,
                 currentUserId,
               ),
-            ],
-          ),
-        );
+              ],
+            ),
+          );
       }),
       floatingActionButton: Obx(() {
         final Team? team = controller.selectedTeam.value;
@@ -113,24 +109,24 @@ class TeamDetailPage extends StatelessWidget {
     bool canManage,
   ) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
                 'Members',
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              if (canManage)
-                TextButton.icon(
+                ),
+                if (canManage)
+                  TextButton.icon(
                   onPressed: () =>
                       _showAddMemberDialog(context, team, controller),
-                  icon: const Icon(Icons.person_add, size: 18),
+                    icon: const Icon(Icons.person_add, size: 18),
                   label: const Text('Add Member'),
                   style: TextButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.primary,
@@ -139,7 +135,7 @@ class TeamDetailPage extends StatelessWidget {
             ],
           ),
         ),
-        if (team.members.isEmpty)
+            if (team.members.isEmpty)
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -161,9 +157,9 @@ class TeamDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-          )
-        else
-          ...team.members.map(
+              )
+            else
+              ...team.members.map(
             (member) =>
                 _buildMemberCard(context, member, team, controller, canManage),
           ),

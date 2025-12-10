@@ -50,7 +50,7 @@ class _RequestsPageState extends State<RequestsPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('Requests')),
+      appBar: AppBar(),
       floatingActionButton: showMyRequests
           ? FloatingActionButton.extended(
               onPressed: _openCreateRequestForm,

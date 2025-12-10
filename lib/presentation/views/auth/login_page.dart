@@ -47,30 +47,19 @@ class _LoginPageState extends State<LoginPage> {
               constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
                 children: <Widget>[
-                  Icon(Symbols.account_circle, size: 48, color: primaryColor),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Welcome back',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Sign in to continue',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade200),
+                   
                     ),
                     child: Form(
                       key: _formKey,
@@ -79,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                           _buildInputField(
                             context,
                             label: 'Email',
-                            hint: 'name@company.com',
+                            hint: 'Your email or phone',
                             icon: Symbols.email,
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
@@ -191,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: 0.8.h),
         Container(
+          
           decoration: BoxDecoration(
             color: surfaceColor,
             borderRadius: BorderRadius.circular(12),

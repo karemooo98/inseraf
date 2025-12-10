@@ -30,6 +30,7 @@ abstract interface class AttendanceRepository {
   Future<void> onlineCheckOut();
 
   Future<AttendanceRecord> updateAttendance({
+    required int? recordId,
     required int userId,
     required String date,
     required String status,

@@ -20,22 +20,48 @@ class AttendanceRecordModel extends AttendanceRecord {
   });
 
   factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
+    // Helper to safely extract String values
+    String? _safeString(dynamic value) {
+      if (value == null) return null;
+      if (value is String) return value;
+      return value.toString();
+    }
+    
+    // Helper to safely extract num values
+    num? _safeNum(dynamic value) {
+      if (value == null) return null;
+      if (value is num) return value;
+      if (value is String) return num.tryParse(value);
+      return null;
+    }
+    
+    // Helper to safely extract bool values
+    bool? _safeBool(dynamic value) {
+      if (value == null) return null;
+      if (value is bool) return value;
+      if (value is num) return value != 0;
+      if (value is String) {
+        return value.toLowerCase() == 'true' || value == '1';
+      }
+      return null;
+    }
+    
     return AttendanceRecordModel(
-      userId: (json['user_id'] as num).toInt(),
-      userName: json['user_name'] as String,
-      date: json['date'] as String,
-      id: (json['id'] as num?)?.toInt(),
-      userEmail: json['user_email'] as String?,
-      userEmployeeNumber: json['user_employee_number']?.toString(),
-      firstCheckIn: json['first_check_in'] as String?,
-      lastCheckOut: json['last_check_out'] as String?,
-      totalHours: (json['total_hours'] as num?)?.toDouble(),
-      workedHours: (json['worked_hours'] as num?)?.toDouble(),
-      missingHours: (json['missing_hours'] as num?)?.toDouble(),
-      overtimeHours: (json['overtime_hours'] as num?)?.toDouble(),
-      overtimeAmountIqd: (json['overtime_amount_iqd'] as num?)?.toInt(),
-      status: json['status'] as String?,
-      isLocked: json['is_locked'] as bool?,
+      userId: _safeNum(json['user_id'])?.toInt() ?? 0,
+      userName: _safeString(json['user_name']) ?? '',
+      date: _safeString(json['date']) ?? '',
+      id: _safeNum(json['id'])?.toInt(),
+      userEmail: _safeString(json['user_email']),
+      userEmployeeNumber: _safeString(json['user_employee_number']),
+      firstCheckIn: _safeString(json['first_check_in']),
+      lastCheckOut: _safeString(json['last_check_out']),
+      totalHours: _safeNum(json['total_hours'])?.toDouble(),
+      workedHours: _safeNum(json['worked_hours'])?.toDouble(),
+      missingHours: _safeNum(json['missing_hours'])?.toDouble(),
+      overtimeHours: _safeNum(json['overtime_hours'])?.toDouble(),
+      overtimeAmountIqd: _safeNum(json['overtime_amount_iqd'])?.toInt(),
+      status: _safeString(json['status']),
+      isLocked: _safeBool(json['is_locked']),
     );
   }
 

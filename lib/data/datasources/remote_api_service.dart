@@ -60,6 +60,7 @@ class RemoteApiService {
   }
 
   Future<JsonMap> updateAttendance({
+    required int? recordId,
     required int userId,
     required String date,
     required String status,
@@ -89,10 +90,16 @@ class RemoteApiService {
     if (reason != null && reason.isNotEmpty) {
       payload['reason'] = reason;
     }
-    final dynamic response = await _client.post(
-      '/api/v1/attendance',
-      data: payload,
-    );
+    
+    // Use PUT with record ID in URL if available, otherwise fallback to POST
+    final String endpoint = recordId != null
+        ? '/api/v1/attendance/admin/$recordId'
+        : '/api/v1/attendance';
+    
+    final dynamic response = recordId != null
+        ? await _client.put(endpoint, data: payload)
+        : await _client.post(endpoint, data: payload);
+    
     return Map<String, dynamic>.from(response as Map);
   }
 

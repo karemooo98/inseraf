@@ -151,6 +151,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
 
   @override
   Future<AttendanceRecord> updateAttendance({
+    required int? recordId,
     required int userId,
     required String date,
     required String status,
@@ -161,6 +162,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
     String? reason,
   }) async {
     final Map<String, dynamic> response = await _api.updateAttendance(
+      recordId: recordId,
       userId: userId,
       date: date,
       status: status,
@@ -170,9 +172,26 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       hoursAdjustment: hoursAdjustment,
       reason: reason,
     );
-    final Map<String, dynamic> data = response.containsKey('data')
-        ? Map<String, dynamic>.from(response['data'] as Map)
-        : response;
+    
+    // Extract data from response safely
+    Map<String, dynamic> data;
+    if (response.containsKey('data') && response['data'] != null && response['data'] is Map) {
+      data = Map<String, dynamic>.from(response['data'] as Map);
+    } else {
+      data = Map<String, dynamic>.from(response);
+    }
+    
+    // Ensure required fields are present, use provided values as fallback
+    if (!data.containsKey('user_id') || data['user_id'] == null) {
+      data['user_id'] = userId;
+    }
+    if (!data.containsKey('date') || data['date'] == null) {
+      data['date'] = date;
+    }
+    if (!data.containsKey('user_name') || data['user_name'] == null) {
+      data['user_name'] = ''; // Will be populated on refresh
+    }
+    
     return AttendanceRecordModel.fromJson(data);
   }
 

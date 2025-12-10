@@ -24,7 +24,6 @@ class ShiftDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.selectedShift.value?.name ?? 'Shift Details')),
         actions: isAdmin
             ? <Widget>[
                 IconButton(

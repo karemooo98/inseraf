@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Primary Colors (Formal Deep Green Palette)
-  static const Color primaryColor = Color(0xFF1F4E3D);
-  static const Color primaryLight = Color(0xFF3E6B59);
-  static const Color primaryDark = Color(0xFF123428);
+  // Primary Colors (Matching logo color: rgba(9, 58, 142))
+  static const Color primaryColor = Color(0xFF093A8E); // Logo blue: rgb(9, 58, 142)
+  static const Color primaryLight = Color(0xFF2E5AA8); // Lighter blue variant
+  static const Color primaryDark = Color(0xFF062A6B); // Darker blue variant
   
   // Accent Colors
-  static const Color accentColor = Color(0xFF8C6C3A);
-  static const Color errorColor = Color(0xFFE53935);
-  static const Color warningColor = Color(0xFFFF9800);
+  static const Color accentColor = Color(0xFF0EA5E9); // Sky blue accent
+  static const Color errorColor = Color(0xFFEF4444); // Modern red
+  static const Color warningColor = Color(0xFFF59E0B); // Amber warning
   
   // Neutral Colors
   static const Color backgroundColor = Color(0xFFF3F4F6);
@@ -47,77 +47,77 @@ class AppTheme {
         ThemeData.light().textTheme,
       ).copyWith(
         displayLarge: GoogleFonts.cairo(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        displayMedium: GoogleFonts.cairo(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        displaySmall: GoogleFonts.cairo(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: textPrimary,
         ),
+        displayMedium: GoogleFonts.cairo(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: textPrimary,
+        ),
+        displaySmall: GoogleFonts.cairo(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: textPrimary,
+        ),
         headlineLarge: GoogleFonts.cairo(
-          fontSize: 22,
+          fontSize: 18,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         headlineMedium: GoogleFonts.cairo(
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         headlineSmall: GoogleFonts.cairo(
-          fontSize: 18,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         titleLarge: GoogleFonts.cairo(
-          fontSize: 18,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         titleMedium: GoogleFonts.cairo(
-          fontSize: 16,
+          fontSize: 13,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         titleSmall: GoogleFonts.cairo(
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         bodyLarge: GoogleFonts.cairo(
-          fontSize: 16,
+          fontSize: 13,
           fontWeight: FontWeight.normal,
           color: textPrimary,
         ),
         bodyMedium: GoogleFonts.cairo(
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.normal,
           color: textPrimary,
         ),
         bodySmall: GoogleFonts.cairo(
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.normal,
           color: textSecondary,
         ),
         labelLarge: GoogleFonts.cairo(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
-        ),
-        labelMedium: GoogleFonts.cairo(
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
+        labelMedium: GoogleFonts.cairo(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: textPrimary,
+        ),
         labelSmall: GoogleFonts.cairo(
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: FontWeight.w600,
           color: textSecondary,
         ),
@@ -128,7 +128,7 @@ class AppTheme {
         backgroundColor: surfaceColor,
         foregroundColor: textPrimary,
         titleTextStyle: GoogleFonts.cairo(
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
@@ -138,22 +138,22 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: borderColor, width: 1),
+          side: BorderSide.none,
         ),
         color: surfaceColor,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: GoogleFonts.cairo(
-            fontSize: 16,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -162,13 +162,13 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           elevation: 0,
           foregroundColor: primaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          side: const BorderSide(color: primaryColor, width: 1.5),
+          side: BorderSide.none,
           textStyle: GoogleFonts.cairo(
-            fontSize: 16,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -176,9 +176,9 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           textStyle: GoogleFonts.cairo(
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -186,26 +186,26 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surfaceColor,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: borderColor, width: 1),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: borderColor, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderSide: BorderSide.none,
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor, width: 1),
+          borderSide: BorderSide.none,
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor, width: 2),
+          borderSide: BorderSide.none,
         ),
         labelStyle: GoogleFonts.cairo(
           fontSize: 14,

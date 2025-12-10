@@ -7,6 +7,7 @@ class UpdateAttendanceUseCase {
   final AttendanceRepository _repository;
 
   Future<AttendanceRecord> call({
+    required int? recordId,
     required int userId,
     required String date,
     required String status,
@@ -17,6 +18,7 @@ class UpdateAttendanceUseCase {
     String? reason,
   }) =>
       _repository.updateAttendance(
+        recordId: recordId,
         userId: userId,
         date: date,
         status: status,

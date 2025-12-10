@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('My Profile')),
+      appBar: AppBar(),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

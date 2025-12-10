@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../domain/entities/attendance_record.dart';
@@ -13,6 +14,7 @@ import '../../controllers/auth_controller.dart';
 import '../../controllers/request_controller.dart';
 import '../../controllers/self_attendance_controller.dart';
 import '../../controllers/shift_controller.dart';
+import '../../widgets/employee_card.dart';
 
 enum DashboardTab { present, onLeave }
 
@@ -695,10 +697,10 @@ class _DashboardPageState extends State<DashboardPage> {
     ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: 2.2.h, horizontal: 1.5.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(2.2.h),
       ),
       child: Column(
         children: <Widget>[
@@ -770,8 +772,8 @@ class _DashboardPageState extends State<DashboardPage> {
         subtitleStyle ??
         Theme.of(context).textTheme.bodySmall ??
         const TextStyle();
-    final double titleFontSize = baseTitleStyle.fontSize ?? 20;
-    final double subtitleFontSize = baseSubtitleStyle.fontSize ?? 12;
+    final double titleFontSize = (baseTitleStyle.fontSize ?? 20) * (1.0.h / 10);
+    final double subtitleFontSize = (baseSubtitleStyle.fontSize ?? 12) * (1.0.h / 10);
 
     return GestureDetector(
       onTap: () {
@@ -785,12 +787,12 @@ class _DashboardPageState extends State<DashboardPage> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 0.5.w),
         decoration: BoxDecoration(
           color: isSelected
               ? primaryColor.withOpacity(0.12)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(1.5.h),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -808,11 +810,14 @@ class _DashboardPageState extends State<DashboardPage> {
                         : titleFontSize,
                   ),
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
+            SizedBox(height: 1.0.h),
+            Flexible(
+              child: Text(
               label,
               style: baseSubtitleStyle.copyWith(
                 color: isSelected ? primaryColor : null,
@@ -824,6 +829,7 @@ class _DashboardPageState extends State<DashboardPage> {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -1337,18 +1343,62 @@ class _DashboardPageState extends State<DashboardPage> {
         0,
         (sum, record) => sum + (record.missingHours ?? 0),
       );
-      final double totalOvertimeHours =
-          fullSummary.overtime?.fold<double>(
-            0,
-            (sum, ot) => sum + ((ot['hours'] as num?)?.toDouble() ?? 0),
-          ) ??
-          0;
-      final int totalOvertimeIQD =
-          fullSummary.overtime?.fold<int>(
-            0,
-            (sum, ot) => sum + ((ot['amount_iqd'] as num?)?.toInt() ?? 0),
-          ) ??
-          0;
+      
+      // Get overtime from statistics first, fallback to calculating from attendance records
+      final Map<String, dynamic>? stats = fullSummary.statistics;
+      double totalOvertimeHours = 0;
+      int totalOvertimeIQD = 0;
+      
+      if (stats != null) {
+        // Get from statistics if available
+        final dynamic overtimeHoursValue = stats['total_overtime_hours'];
+        if (overtimeHoursValue != null) {
+          if (overtimeHoursValue is num) {
+            totalOvertimeHours = overtimeHoursValue.toDouble();
+          } else if (overtimeHoursValue is String) {
+            totalOvertimeHours = double.tryParse(overtimeHoursValue) ?? 0;
+          }
+        }
+        
+        final dynamic overtimeAmountValue = stats['total_overtime_amount_iqd'];
+        if (overtimeAmountValue != null) {
+          if (overtimeAmountValue is num) {
+            totalOvertimeIQD = overtimeAmountValue.toInt();
+          } else if (overtimeAmountValue is String) {
+            totalOvertimeIQD = int.tryParse(overtimeAmountValue) ?? 0;
+          }
+        }
+      }
+      
+      // Fallback: calculate from attendance records if statistics not available or doesn't have overtime
+      if (totalOvertimeHours == 0) {
+        totalOvertimeHours = fullSummary.attendance.fold<double>(
+          0,
+          (sum, record) => sum + (record.overtimeHours ?? 0),
+        );
+      }
+      
+      // Also try to get from overtime list if statistics doesn't have amount
+      if (totalOvertimeIQD == 0 && fullSummary.overtime != null) {
+        totalOvertimeIQD = fullSummary.overtime!.fold<int>(
+          0,
+          (sum, ot) {
+            final dynamic amount = ot['amount_iqd'];
+            if (amount == null) return sum;
+            if (amount is num) return sum + amount.toInt();
+            if (amount is String) return sum + (int.tryParse(amount) ?? 0);
+            return sum;
+          },
+        );
+      }
+      
+      // Final fallback: calculate amount from attendance records if still 0
+      if (totalOvertimeIQD == 0) {
+        totalOvertimeIQD = fullSummary.attendance.fold<int>(
+          0,
+          (sum, record) => sum + (record.overtimeAmountIqd ?? 0),
+        );
+      }
       final double totalTaskHours =
           fullSummary.tasks?.fold<double>(
             0,
@@ -1893,49 +1943,15 @@ class _DashboardPageState extends State<DashboardPage> {
         ? record.userEmployeeNumber!
         : record.userId.toString();
     final Color primaryColor = Theme.of(context).colorScheme.primary;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: primaryColor.withOpacity(0.12),
-            child: Text(
-              record.userName.isNotEmpty
-                  ? record.userName[0].toUpperCase()
-                  : '?',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: primaryColor,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'ID: $idLabel',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  record.userName,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 4,
+    return EmployeeCard(
+      userName: record.userName,
+      employeeNumber: record.userEmployeeNumber,
+      userId: record.userId,
+      avatarBackgroundColor: primaryColor.withOpacity(0.12),
+      avatarTextColor: primaryColor,
+      subtitle: Wrap(
+        spacing: 1.0.w,
+        runSpacing: 0.5.h,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: <Widget>[
                     _subInfo(Symbols.login, _formatTime(record.firstCheckIn)),
@@ -1946,29 +1962,25 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Column(
+      trailing: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              const SizedBox(height: 6),
+          SizedBox(height: 0.8.h),
               Text(
                 '${record.workedHours?.toStringAsFixed(1) ?? '0'}h',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 1.8.h,
+                ),
               ),
+          SizedBox(height: 0.5.h),
               Text(
                 badge['label'] as String,
                 style: TextStyle(
                   color: badge['textColor'] as Color,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+              fontSize: 1.4.h,
                 ),
-              ),
-            ],
           ),
         ],
       ),
